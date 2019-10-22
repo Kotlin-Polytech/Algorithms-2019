@@ -2,6 +2,10 @@
 
 package lesson2
 
+import java.io.File
+import java.lang.IllegalArgumentException
+import kotlin.math.sqrt
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -26,8 +30,37 @@ package lesson2
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
+// N = кол-во строк
+//Трудоёмкость = O(N)
+//Ресурсоемкость = O(N)
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
-    TODO()
+    val pricesList = mutableListOf<Int>()
+
+    for (line in File(inputName).readLines()) {
+        if (!Regex("""\d+""").matches(line)) throw IllegalArgumentException()
+        else {
+            pricesList.add(line.toInt())
+        }
+    }
+
+    var bestBuy = 0
+    var bestSell = 0
+    var minIndex = 0
+
+
+    for (index in 1 until pricesList.size) {
+        if (pricesList[index] < pricesList[minIndex])
+            minIndex = index
+
+        when {
+            pricesList[index] - pricesList[minIndex] > pricesList[bestSell] - pricesList[bestBuy] -> {
+                bestBuy = minIndex
+                bestSell = index
+            }
+        }
+
+    }
+    return (Pair(bestBuy + 1, bestSell + 1))
 }
 
 /**
@@ -79,8 +112,16 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  * Общий комментарий: решение из Википедии для этой задачи принимается,
  * но приветствуется попытка решить её самостоятельно.
  */
+//N = menNumber
+//Трудоёмкость = O(N)
+//Ресурсоёмкость = O(1)
 fun josephTask(menNumber: Int, choiceInterval: Int): Int {
-    TODO()
+    var previous = 0
+
+    (1..menNumber).forEach {
+        previous = (choiceInterval - 1 + previous) % it + 1
+    }
+    return previous
 }
 
 /**
@@ -94,8 +135,35 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  */
+//N = first.length
+// M = second.length
+//Трудоемкость = O(M*N) ~ O(N^2)
+//Ресурсоёмкость = O(M*N) ~ O(N^2)
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    if (first.isEmpty() || second.isEmpty()) return ""
+    if (first == second) return first
+
+    val count = Array(first.length + 1) { IntArray(second.length + 1) }
+    var maxIndex = 0
+    var maxLength = 0
+
+    first.indices.forEach { i ->
+        second.indices.forEach { j ->
+            if (first[i] == second[j]) {
+                count[i + 1][j + 1] = count[i][j] + 1
+                if (count[i + 1][j + 1] > maxLength) {
+                    maxLength = count[i + 1][j + 1]
+                    maxIndex = i
+                }
+            }
+        }
+    }
+    return when {
+        maxLength == 0 -> ""
+        else -> first.substring(maxIndex - maxLength + 1, maxIndex + 1)
+    }
+
+
 }
 
 /**
@@ -108,8 +176,24 @@ fun longestCommonSubstring(first: String, second: String): String {
  * Справка: простым считается число, которое делится нацело только на 1 и на себя.
  * Единица простым числом не считается.
  */
-fun calcPrimesNumber(limit: Int): Int {
-    TODO()
+//N=limit.size
+//Трудоёмкость = O(log(N))
+//Ресурсоёмкость = O(1)
+fun calcPrimesNumber(limit: Int): Int = (1..limit).count { isPrime(it) }
+
+//in tandem with this fun
+fun isPrime(n: Int): Boolean {
+    return when {
+        n <= 1 -> false
+        n == 2 -> true
+        else -> {
+            for (num in 2..sqrt(n.toDouble()).toInt()) {
+                if (n % num == 0)
+                    return false
+            }
+            true
+        }
+    }
 }
 
 /**
