@@ -86,6 +86,7 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(8) }
         assertEquals(8, set.size)
         assertEquals(13, tree.size)
+
     }
 
     protected fun doTailSetRelationTest() {
