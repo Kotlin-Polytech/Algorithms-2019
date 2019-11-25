@@ -23,6 +23,7 @@ abstract class AbstractHeadTailTest {
         tree.add(3)
         tree.add(6)
 
+
         this.randomTree = create()
         val random = Random()
         for (i in 0 until randomTreeSize) {
@@ -46,6 +47,7 @@ abstract class AbstractHeadTailTest {
         assertEquals(false, set.contains(8))
         assertEquals(false, set.contains(9))
         assertEquals(false, set.contains(10))
+        assertEquals(false, set.contains(-99))
 
 
         set = tree.headSet(127)
@@ -70,6 +72,12 @@ abstract class AbstractHeadTailTest {
         set = tree.tailSet(-128)
         for (i in 1..10)
             assertEquals(true, set.contains(i))
+        set = tree.tailSet(2)
+        for (i in 5..7)
+            assertEquals(true, set.contains(i))
+        set = tree.tailSet(99)
+        for (i in 8 downTo 7)
+            assertEquals(false, set.contains(i))
 
     }
 

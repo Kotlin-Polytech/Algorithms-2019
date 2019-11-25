@@ -100,7 +100,7 @@ class KtBinaryTree<T : Comparable<T>>() : AbstractMutableSet<T>(), CheckableSort
 
     /*
      little helper to simplify remove() method
-     TimeComplexity =O(LogN)
+     TimeComplexity =O(H), H= height of a tree
      MemoryComplexity =O(1)
     */
     private fun parents(node: Node<T>): Node<T> {
